@@ -1,43 +1,53 @@
-# 🔋 Electronic Car Battery Life Prediction
+# 🔥 Car Battery Temperature Prediction
 
-This project predicts the **health and remaining life of an electronic car battery** using **Deep Learning (ANN)**. Built with **Python, Flask, and Scikit-learn**, the app provides a user-friendly web interface for real-time predictions based on input parameters.
+This project predicts whether a **car battery is safe to charge** or **too hot/cold to charge** based on temperature and other input parameters.
+It uses a **Deep Learning (ANN)** model built with **Python, Flask, and Scikit-learn** to provide instant predictions through a clean web interface.
 
 ---
 
-## 🚀 Features
+## 🚗 Overview
 
-* Predicts **car battery health and life expectancy** using Artificial Neural Networks (ANN).
-* Clean **Flask web interface** for interactive use.
-* Trained on a **Kaggle dataset** for accuracy and reliability.
-* Modular, easy-to-understand **Python code structure**.
-* Ready to deploy locally or on cloud platforms.
+Battery temperature plays a key role in electric vehicle performance and safety.
+Charging a battery at unsafe temperatures can reduce its lifespan or even cause damage.
+This project aims to **predict the charging suitability** (Cool / Optimal / Hot) of a battery using temperature-related data.
 
 ---
 
 ## 🧠 Tech Stack
 
-| Category         | Tools / Libraries                    |
-| ---------------- | ------------------------------------ |
-| Language         | Python                               |
-| Framework        | Flask                                |
-| Machine Learning | Scikit-learn, TensorFlow/Keras (ANN) |
-| Data Handling    | Pandas, NumPy                        |
-| Frontend         | HTML, CSS, Jinja2 Templates          |
+| Category         | Tools / Libraries           |
+| ---------------- | --------------------------- |
+| Language         | Python                      |
+| Framework        | Flask                       |
+| Deep Learning    | TensorFlow / Keras (ANN)    |
+| Machine Learning | Scikit-learn                |
+| Data Handling    | Pandas, NumPy               |
+| Frontend         | HTML, CSS, Jinja2 Templates |
+
+---
+
+## 🧩 Features
+
+* Predicts **battery temperature condition** (Cool / Normal / Hot).
+* Determines whether the battery is **safe to charge or not**.
+* Built with an **Artificial Neural Network (ANN)** for accurate results.
+* Clean and simple **Flask web interface** for live predictions.
+* Uses **Kaggle dataset** for training and evaluation.
 
 ---
 
 ## 📂 Project Structure
 
 ```
-car_battery_prediction/
+car_battery_temp_prediction/
 │
-├── app.py                # Main Flask application
+├── app.py                # Flask application
 ├── model.pkl             # Trained ANN model
-├── static/               # CSS and image files
+├── static/               # CSS and assets
 ├── templates/            # HTML templates
-├── requirements.txt      # Dependencies
+├── requirements.txt      # Dependencies list
 ├── README.md             # Project documentation
-└── .gitignore            # Ignored files (e.g., .venv)
+└── .gitignore            # Ignore files (like .venv)
 ```
 
 ---
@@ -47,8 +57,8 @@ car_battery_prediction/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/jrDhiraj/car_battery_prediction.git
-cd car_battery_prediction
+git clone https://github.com/jrDhiraj/car_battery_temp_prediction.git
+cd car_battery_temp_prediction
 ```
 
 ### 2. Create and Activate Virtual Environment
@@ -65,13 +75,13 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### 4. Run the Flask App
+### 4. Run the Application
 
 ```bash
 python app.py
 ```
 
-Then open your browser and visit:
+Visit in your browser:
 
 ```
 http://127.0.0.1:5000/
@@ -81,23 +91,32 @@ http://127.0.0.1:5000/
 
 ## 📊 Dataset
 
-* **Source:** [Kaggle Dataset on Car Battery Life Prediction](https://www.kaggle.com/)
-* Used for training and validating the ANN model.
+* **Source:** [Kaggle – Car Battery Temperature Dataset](https://www.kaggle.com/)
+* Features include: ambient temperature, voltage, current, internal resistance, etc.
+* The model classifies temperature conditions and charging safety.
 
 ---
 
 ## 🔍 Example Prediction
 
-The model takes user inputs like voltage, temperature, current, and usage duration to predict:
+Input Example:
 
-> **Battery Condition:** Healthy / Weak / Replace Soon
+| Parameter           | Value  |
+| ------------------- | ------ |
+| Voltage             | 12.6 V |
+| Ambient Temperature | 35°C   |
+| Internal Resistance | 0.03 Ω |
+
+Output Example:
+
+> **Prediction:** Hot — *Unsafe to Charge*
 
 ---
 
 ## 🧑‍💻 Author
 
 **Dhiraj Kumar Sharma**
-Engineering Student | Data Science & AI Enthusiast
+Engineering Student | Deep Learning & AI Enthusiast
 
 🌐 [GitHub](https://github.com/jrDhiraj)
 💼 [LinkedIn](https://www.linkedin.com/in/dhiraj-kumar-sharma-9054a5243/)
@@ -106,12 +125,12 @@ Engineering Student | Data Science & AI Enthusiast
 
 ## 📜 License
 
-This project is open-source and available under the **MIT License**.
+This project is licensed under the **MIT License**.
 
 ---
 
-## 💡 Future Improvements
+## 🚀 Future Enhancements
 
-* Integrate real-time IoT battery sensor data.
-* Deploy on Render / AWS / Azure.
-* Add mobile-friendly UI for live monitoring.
+* Integrate with real-time car sensors (IoT).
+* Add temperature-based alerts in the web dashboard.
+* Deploy on **Render / Railway / AWS EC2** for public access.
