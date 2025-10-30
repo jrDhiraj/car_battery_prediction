@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battery Temperature Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="text"]:hover {
+            border-color: #c1c8d0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .prediction-result {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .prediction-result h3 {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .form-header h2 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+                margin: 20px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            input[type="text"] {
+                padding: 10px 14px;
+            }
+            
+            .submit-btn {
+                padding: 12px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+            
+            h2 {
+                font-size: 22px;
+            }
+        }
+
+        /* Loading animation for submit button */
+        .submit-btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h2>Predict Ambient Temperature</h2>
+        </div>
+        
+        <form action="/predict" method="post" id="predictionForm">
+            <div class="form-group">
+                <label for="Capacity">Capacity:</label>
+                <input type="text" id="Capacity" name="Capacity" required placeholder="Enter battery capacity">
+            </div>
+
+            <div class="form-group">
+                <label for="Rct">Rct:</label>
+                <input type="text" id="Rct" name="Rct" required placeholder="Enter Rct value">
+            </div>
+
+            <div class="form-group">
+                <label for="Re">Re:</label>
+                <input type="text" id="Re" name="Re" required placeholder="Enter Re value">
+            </div>
+
+            <div class="form-group">
+                <label for="type">Type:</label>
+                <input type="text" id="type" name="type" required placeholder="Enter battery type">
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Predict Temperature</button>
+        </form>
+
+        {% if prediction_text %}
+        <div class="prediction-result 
+            {% if 'Cool' in prediction_text %}cool
+            {% elif 'Normal' in prediction_text %}normal
+            {% elif 'Hot' in prediction_text %}hot
+            {% endif %}">
+            <h3>{{ prediction_text }}</h3>
+        </div>
+    {% endif %}
+    </div>
+
+    <script>
+        // Add loading state to submit button
+        document.getElementById('predictionForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = 'Predicting...';
+        });
+
+        // Add input validation
+        const inputs = document.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '#4CAF50';
+                } else {
+                    this.style.borderColor = '#e1e5e9';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
