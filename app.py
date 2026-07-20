@@ -1,50 +1,90 @@
-from flask import Flask, request, render_template, jsonify
-import numpy as np
+import streamlit as st
+import pandas as pd
 import joblib
-import tensorflow as tf
-import sklearn
+from tensorflow.keras.models import load_model
 
+model = load_model("battery_temp_model.h5")
 
-# Initialize Flask app
-app = Flask(__name__)
+# ----------------------------
+# Load Objects
+# ----------------------------
+scaler = joblib.load("scaler.pkl")
+encoder = joblib.load("encoder.pkl")
 
-# Load model and preprocessing tools
-model = tf.keras.models.load_model(r'model/battery_temp_model.h5')
-scaler = joblib.load(r'model\scaler (2).pkl')
-encoder = joblib.load(r'model\encoder.pkl')
+# ----------------------------
+# Page Config
+# ----------------------------
+st.set_page_config(
+    page_title="Battery Temperature Prediction",
+    page_icon="🔋",
+    layout="centered"
+)
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+st.title("🔋 Battery Ambient Temperature Prediction")
+st.write("Enter Battery Information")
 
-@app.route('/predict', methods=['POST'])
-def predict():
+# ----------------------------
+# Inputs
+# ----------------------------
+
+capacity = st.number_input(
+    "Capacity",
+    min_value=0.0,
+    value=1.67,
+    format="%.6f",
+    help="Example: 1.674304"
+)
+
+re = st.number_input(
+    "Re",
+    min_value=0.0,
+    value=0.056058,
+    format="%.6f",
+    help="Example: 0.056058"
+)
+
+rct = st.number_input(
+    "Rct",
+    min_value=0.0,
+    value=0.200970,
+    format="%.6f",
+    help="Example: 0.200970"
+)
+
+battery_type = st.selectbox(
+    "Battery Type",
+    ["charge", "discharge", "impedance"]
+)
+
+# ----------------------------
+# Prediction
+# ----------------------------
+
+if st.button("Predict Temperature"):
+
     try:
-        # Get input data from form
-        input_data = [
-            float(request.form['Capacity']),
-            float(request.form['Rct']),
-            float(request.form['Re']),
-            encoder.transform([request.form['type']])[0]
-        ]
 
-        # Scale input and predict
-        scaled_input = scaler.transform([input_data])
-        prediction = model.predict(scaled_input)
-        output = float(prediction[0][0])
+        # Label Encoding
+        battery_type = encoder.transform([battery_type])[0]
 
-        # Add logic for dynamic message
-        if output < 20:
-            message = f"{output:.2f}°C → Cool temperature. Safe to charge."
-        elif 20 <= output < 35:
-            message = f"{output:.2f}°C → Normal range. Battery working fine."
-        else:
-            message = f"{output:.2f}°C → Hot! Avoid charging now."
+        # DataFrame
+        df = pd.DataFrame(
+            [[battery_type, capacity, re, rct]],
+            columns=[
+                "type",
+                "Capacity",
+                "Re",
+                "Rct"
+            ]
+        )
 
-        return render_template('index.html', prediction_text=message)
+        # Scaling
+        df_scaled = scaler.transform(df)
+
+        # Prediction
+        prediction = model.predict(df_scaled, verbose=0)[0][0]
+
+        st.success(f"🌡 Predicted Ambient Temperature : {prediction:.2f} °C")
 
     except Exception as e:
-        return jsonify({'error': str(e)})
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        st.error(str(e))
